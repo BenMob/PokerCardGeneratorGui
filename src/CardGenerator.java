@@ -3,6 +3,7 @@
  * Poker Card Generator
  ******************/
 
+import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 
@@ -49,6 +50,7 @@ public class CardGenerator{
       locateCards();
       loadCards();
       configureCards();
+      //shuffle();
       positionCardsOnDisplay();
 
       /*
@@ -113,7 +115,11 @@ public class CardGenerator{
      * This method shuffles the cards to be displayed
      ************************************************/
     public void shuffle(){
-        //TODO: Implement shuffle method
+        //Fills the cardsOnDisplay[] array with random cards from cards[]
+        Random randomNumber = new Random();
+        for (int i = 0; i < numberOfCardsOnDisplay; i++){
+            cardsOnDisplay[i] = cards[randomNumber.nextInt(numberOfCards)];
+        }
     }
 
     /************************************************************************
@@ -130,7 +136,7 @@ public class CardGenerator{
                 final String[] cardValues = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "K", "J", "Q"};
                 final char[] cardSuits = {'C', 'D', 'H', 'S'};
 
-                // Important: update the first three components of this filepath to match your computer before running
+                // Important: update the first 4 components of this filepath to match your computer before running
                 String filePath = "/Users/benjaminmobole/Desktop/SE370-Lab/Card-Generator/src/pokerCards/";
                 String card = null;
 
@@ -181,9 +187,12 @@ public class CardGenerator{
         try {
 
             //adds the ready to be displayed cards on the screen
-            for (int i = 0; i < numberOfCardsOnDisplay; i++){
-                body.add(cards[i], cardPositions[i]);
-            }
+            System.out.println(cardsOnDisplay.length);
+            if(cardsOnDisplay.length != 0) {
+                for (int i = 0; i < numberOfCardsOnDisplay; i++) {
+                    body.add(cardsOnDisplay[i], cardPositions[i]);
+                }
+            }else throw new ArrayStoreException(" No cards on display. Fill in cardsToDisplay[] ");
             body.add(button, buttonPosition);
 
             window.add(body);  // adds the body onto the frame
