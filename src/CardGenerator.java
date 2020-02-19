@@ -3,9 +3,15 @@
  * Poker Card Generator
  ******************/
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;
+
+abstract class Action implements ActionListener{
+
+}
 
 public class CardGenerator{
 
@@ -43,9 +49,18 @@ public class CardGenerator{
       // Configure Button(s) TODO:
       button = new JButton("Shuffle");
       button.setAlignmentY(13);
-      //button.setBackground(new Color(12, 45, 100));
-      //button.setForeground(Color.black);
-      //button.setActionCommand();
+      button.addActionListener(new Action() {
+          // TODO: Optimize this process amke the button call a method explicitly
+          // TODO: Make shuffling more random
+          @Override
+          public void actionPerformed(ActionEvent e) {
+              Random randomNumber = new Random();
+              for (int i = 0; i < numberOfCardsOnDisplay; i++){
+                  cardsOnDisplay[i] = cards[randomNumber.nextInt(numberOfCards)];
+              }
+              launch();
+          }
+      });
 
       // Configure cards
       locateCards();
@@ -55,7 +70,6 @@ public class CardGenerator{
       positionCardsOnDisplay();
 
       /*
-      TODO: Implement shuffle method
       TODO: Figure out how to trigger a function when button click
        */
     }
