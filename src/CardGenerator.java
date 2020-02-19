@@ -42,6 +42,7 @@ public class CardGenerator{
 
       // Configure Button(s) TODO:
       button = new JButton("Shuffle");
+      button.setAlignmentY(13);
       //button.setBackground(new Color(12, 45, 100));
       //button.setForeground(Color.black);
       //button.setActionCommand();
@@ -187,7 +188,7 @@ public class CardGenerator{
         try {
 
             //adds the ready to be displayed cards on the screen
-            if(cardsOnDisplay.length == 0) {
+            if(cardsOnDisplay != null) {
                 for (int i = 0; i < numberOfCardsOnDisplay; i++) {
                     body.add(cardsOnDisplay[i], cardPositions[i]);
                 }
