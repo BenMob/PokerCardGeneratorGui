@@ -50,7 +50,7 @@ public class CardGenerator{
       locateCards();
       loadCards();
       configureCards();
-      //shuffle();
+      shuffle();
       positionCardsOnDisplay();
 
       /*
@@ -187,11 +187,11 @@ public class CardGenerator{
         try {
 
             //adds the ready to be displayed cards on the screen
-            if(cardsOnDisplay == null) {
+            if(cardsOnDisplay.length == 0) {
                 for (int i = 0; i < numberOfCardsOnDisplay; i++) {
                     body.add(cardsOnDisplay[i], cardPositions[i]);
                 }
-            }else throw new ArrayStoreException(" No cards to display. Fill cardsToDisplay[] first.\n");
+            }else throw new ArrayStoreException(" No cards to display. Fill cardsToDisplay[] first by calling shuffle().\n");
             body.add(button, buttonPosition);
 
             window.add(body);  // adds the body onto the frame
