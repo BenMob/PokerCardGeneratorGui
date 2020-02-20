@@ -1,6 +1,5 @@
 /***********************
- * SE 370
- * Team 3
+ * By Benjamin Ombeni
  * Poker Card Generator
  ***********************/
 import java.awt.event.ActionEvent;
