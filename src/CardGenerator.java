@@ -1,8 +1,8 @@
-/*******************
+/***********************
  * SE 370
+ * Team 3
  * Poker Card Generator
- ******************/
-
+ ***********************/
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
@@ -19,6 +19,9 @@ public class CardGenerator implements ActionListener{
     protected JPanel body = null;
     protected JButton button = null;
 
+    protected ImageIcon deckImage = new ImageIcon();
+    protected JLabel deck = new JLabel();
+
     protected ImageIcon[] images = new ImageIcon[numberOfCards]; // image Icons array
     protected String[] imageLocations = new String[numberOfCards]; // image locations array
     protected JLabel[] cards = new JLabel[numberOfCards]; // image Icon Labels ready for display
@@ -30,21 +33,21 @@ public class CardGenerator implements ActionListener{
     public CardGenerator(){
       // Configure Frame
       window = new JFrame("Poker Card Generator");
-      window.setSize(900, 600);
+      window.setSize(800, 600);
+      window.setResizable(false);
       window.setBackground(Color.green);
       window.setLocationRelativeTo(null); //centers the frame
       window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
       // Configure Body
-      body = new JPanel(new FlowLayout());
+      body = new JPanel(null);
       body.setBackground(Color.black);
 
-      // Configure Button(s) TODO:
-      button = new JButton("Shuffle");
-      button.setAlignmentX(50);
+      // Configure Button(s)
+      button = new JButton("Launch");
       button.setOpaque(false);
       button.setFont(Font.getFont("sans-serif"));
-      button.setAlignmentY(30);
+      button.setBounds(380,250,170,35);
       button.addActionListener(this); // Triggers the only action listener in the program located right before the main
 
       // Configure cards
@@ -52,11 +55,7 @@ public class CardGenerator implements ActionListener{
       loadCards();
       configureCards();
       initializeCardsContainer();
-      displayCards();
-
-      /*
-      TODO: Figure out how to trigger a function when button click
-       */
+      //displayCards();
     }
     /*******************************************************************
      * This method resize each cardIcon and
@@ -86,6 +85,13 @@ public class CardGenerator implements ActionListener{
                 // turns image back into an icon
                 images[currentCard] = new ImageIcon(Deck[currentCard]);
             }
+
+            // Configure glowing deck image (Will optimize this later)
+            Image glowingDeck = deckImage.getImage();
+            glowingDeck = glowingDeck.getScaledInstance(100,135, Image.SCALE_SMOOTH);
+            deck.setIcon(new ImageIcon(glowingDeck));
+
+
         }catch (Exception e){
             System.out.println(e + " Failure in resizing images");
         }
@@ -95,7 +101,7 @@ public class CardGenerator implements ActionListener{
      * This method shuffles the cards to be displayed
      ************************************************/
     public void initializeCardsContainer(){
-        //Fills the cardsOnDisplay[] array with random cards from cards[]
+        // Fills the cardsOnDisplay[] array with random cards from cards[]
         Random randomNumber = new Random();
         for (int i = 0; i < numberOfCardsOnDisplay; i++){
             cardsOnDisplay[i] = cards[randomNumber.nextInt(numberOfCards)];
@@ -116,11 +122,8 @@ public class CardGenerator implements ActionListener{
                 final char[] cardSuits = {'C', 'D', 'H', 'S'};
 
                 // Important: update the first 4 components of this filepath to match your computer before running
-                String filePath = "/Users/benjaminmobole/Desktop/SE370-Lab/Card-Generator/src/pokerCards/";
+                String filePath = "src/pokerCards/";
                 String card = null;
-
-                // Command line msg
-                System.out.println("\nThe following paths were generated, however they may need to be changed depending on the OS.");
 
                 byte index = 0;
                 for (String value : cardValues) {
@@ -153,21 +156,29 @@ public class CardGenerator implements ActionListener{
                     images[i] = new ImageIcon(imageLocations[i]);
                     System.out.println("Image " + (i+1) + " loaded");
                 }
+                deckImage = new ImageIcon("src/pokerCards/ZZ.png"); // glowing card deck image
             }
         }catch (Exception e){
             System.out.println(e + " Cards were not loaded properly.");
         }
     }
 
+
     /********************************************
-     * This function  displays cards on th screen
+     * This function  displays cards on the screen
      *********************************************/
     public void displayCards(){
         //adds the ready to be displayed cards on the screen
+        int x = 150;
         if(cardsOnDisplay != null) {
             for (int i = 0; i < numberOfCardsOnDisplay; i++) {
+                cardsOnDisplay[i].setBounds(x ,5,120,150);
+
                 body.add(cardsOnDisplay[i]);
+                x = x+110;
             }
+            // Change the text message
+            button.setText("Shuffle");
         }else throw new ArrayStoreException(" No cards to display. Fill cardsToDisplay[] first by calling shuffle().\n");
     }
 
@@ -177,7 +188,6 @@ public class CardGenerator implements ActionListener{
     public void launch(){
         try {
             body.add(button);
-
             window.add(body);  // adds the body onto the frame
             window.setVisible(true);
         }catch (Exception e){
@@ -190,13 +200,28 @@ public class CardGenerator implements ActionListener{
      * I update the cards being displayed on the screen
      * when button is clicked.
      **************************************************/
-    public void actionPerformed(ActionEvent a){
+    public void actionPerformed(ActionEvent a) {
         Random randomNumber = new Random();
         for (int i = 0; i < numberOfCardsOnDisplay; i++) {
             cardsOnDisplay[i].setIcon(images[randomNumber.nextInt(numberOfCards)]);
         }
-        displayCards();
-        window.setVisible(true);
+
+        // Displaying the deck
+        int x = 200;
+        int y = 200;
+
+        if (cards != null) {
+            deck.setBounds(200, y, 100,135);
+            body.add(deck);
+            for (int i = 0; i < numberOfCards; i++) {
+                cards[i].setBounds(x, y, 100, 135);
+                body.add(cards[i]);
+                x = x - 1;
+            }
+
+            displayCards();
+            window.setVisible(true);
+        }
     }
 
     // Main function
@@ -205,33 +230,3 @@ public class CardGenerator implements ActionListener{
         myCards.launch();
     }
 }
-
-
-/***********************************************************
- * This method define how cards will be positioned on display
- ************************************************************
- public void positionCardsOnDisplay(){
-
- try {
- // This loop sets the position of each card on the screen
- for (int i = 0; i < numberOfCardsOnDisplay; i++) {
- cardPositions[i] = new GridBagConstraints();
- cardPositions[i].fill = GridBagConstraints.VERTICAL;
- cardPositions[i].gridx = i;
- cardPositions[i].gridy = 0;
- cardPositions[i].weightx = 0.1;
- cardPositions[i].ipady = 80;
- }
-
- // Now positioning the button
- buttonPosition.fill = GridBagConstraints.HORIZONTAL;
- buttonPosition.gridx = 2;
- buttonPosition.gridy = 3;
- buttonPosition.weighty = 0.1;
- buttonPosition.ipady = 50;
-
- }catch (Exception e){
- System.out.println(e + " Failure positioning image");
- }
- }
- */
